@@ -1,0 +1,43 @@
+.container {
+  -fx-background-color: radial-gradient(radius 150%, #051937 25%, #375afe 120%);
+}
+
+.info {
+  -fx-background-color: rgba(255, 255, 255, .15);
+  -fx-background-radius: 20px;
+}
+
+.btn {
+  -fx-padding: 25px 40px;
+  -fx-background-color: rgba(255, 255, 255, .15);
+  -fx-background-radius: 15;
+  -fx-text-fill: white;
+}
+
+.btn:hover {
+  -fx-background-color: rgba(255, 255, 255, 0.5);
+  -fx-background-radius: 15;
+  -fx-border-radius: 15;
+  -fx-text-fill: radial-gradient(radius 150%, #051937 25%, #375afe 120%);
+}
+
+.next-btn {
+  -fx-padding: 25px 40px;
+  -fx-text-fill: white;
+  -fx-background-color: rgba(0, 0, 255, 0.35);
+  -fx-background-radius: 20;
+}
+
+.next-btn:hover {
+  -fx-background-color: blue;
+}
+
+.selected {
+  -fx-background-color: rgba(255, 255, 255, 0.75) !important;
+  -fx-text-fill: radial-gradient(radius 150%, #051937 25%, #375afe 120%) !important;
+}
+
+.questionContainer {
+  //-fx-background-color: radial-gradient(radius 150%, #051937 25%, #375afe 120%);
+  -fx-background-color: transparent;
+}

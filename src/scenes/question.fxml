@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="question" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="container" stylesheets="@../styles/question.css" xmlns="http://javafx.com/javafx/10.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.QuestionController">
+   <Pane layoutX="9.0" layoutY="11.0" prefHeight="43.0" prefWidth="982.0" styleClass="info" stylesheets="/styles/question.css">
+      <Label fx:id="timeRemaining" layoutX="69.0" layoutY="14.0" stylesheets="/styles/question.css" text="30:00" textFill="WHITE">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="nrQuestionsRemaining" layoutX="325.0" layoutY="12.0" stylesheets="/styles/question.css" text="10 geblieben" textFill="WHITE">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="nrCorrectQuestions" layoutX="724.0" layoutY="12.0" stylesheets="/styles/question.css" text="5 wahre" textFill="#00ff11">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="nrIncorrectQuestions" layoutX="848.0" layoutY="12.0" stylesheets="/styles/question.css" text="3 falsche" textFill="RED">
+         <font>
+            <Font name="Arial" size="14.0" />
+         </font>
+      </Label>
+   </Pane>
+   <Pane fx:id="questionContainer" layoutY="54.0" prefHeight="546.0" prefWidth="1000.0" styleClass="questionContainer"
+         stylesheets="@../styles/question.css">
+      <Pane layoutX="22.0" layoutY="26.0" prefHeight="77.0" prefWidth="619.0" stylesheets="/styles/question.css">
+         <Label fx:id="displayedQuestion" alignment="CENTER" contentDisplay="CENTER" layoutX="12.0" layoutY="14.0"
+                prefHeight="52.0" prefWidth="595.0" text="Diese ist die Frage. Kannst du das beantworten?"
+                textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <font>
+               <Font name="Arial" size="18.0"/>
+            </font>
+         </Label>
+      </Pane>
+      <Pane layoutX="14.0" layoutY="108.0" prefHeight="424.0" prefWidth="627.0">
+         <Button fx:id="answer1" contentDisplay="CENTER" layoutX="14.0" layoutY="14.0" mnemonicParsing="false"
+                 onAction="#toggleAnswer1" prefHeight="200.0" prefWidth="301.0" styleClass="btn"
+                 stylesheets="/styles/question.css" text="Gute Lösing" textAlignment="CENTER" textOverrun="CLIP"
+                 wrapText="true">
+            <font>
+               <Font name="Arial" size="14.0"/>
+            </font>
+         </Button>
+         <Button fx:id="answer2" alignment="CENTER" contentDisplay="CENTER" layoutX="322.0" layoutY="14.0"
+                 mnemonicParsing="false" onAction="#toggleAnswer2" prefHeight="200.0" prefWidth="291.0" styleClass="btn"
+                 stylesheets="/styles/question.css" text="Schlecht" textAlignment="CENTER" wrapText="true">
+            <font>
+               <Font name="Arial" size="14.0"/>
+            </font>
+         </Button>
+         <Button fx:id="answer3" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="234.0"
+                 mnemonicParsing="false" onAction="#toggleAnswer3" prefHeight="176.0" prefWidth="301.0" styleClass="btn"
+                 stylesheets="/styles/question.css" text="Schlecht" textAlignment="CENTER" wrapText="true">
+            <font>
+               <Font name="Arial" size="14.0"/>
+            </font>
+         </Button>
+         <Button fx:id="answer4" alignment="CENTER" contentDisplay="CENTER" layoutX="328.0" layoutY="228.0"
+                 mnemonicParsing="false" onAction="#toggleAnswer4" prefHeight="182.0" prefWidth="285.0" styleClass="btn"
+                 stylesheets="/styles/question.css" text="Schlecht" textAlignment="CENTER" wrapText="true">
+            <font>
+               <Font name="Arial" size="14.0"/>
+            </font>
+         </Button>
+      </Pane>
+      <Button fx:id="nextQuestion" layoutX="697.0" layoutY="402.0" mnemonicParsing="false" onAction="#nextQuestion"
+              prefHeight="52.0" prefWidth="239.0" styleClass="next-btn" stylesheets="/styles/question.css"
+              text="Nächste Frage" textFill="WHITE">
+         <font>
+            <Font name="Arial" size="14.0"/>
+         </font>
+      </Button>
+      <ImageView fx:id="picture" fitHeight="264.0" fitWidth="228.0" layoutX="697.0" layoutY="43.0" pickOnBounds="true"
+                 preserveRatio="true"/>
+   </Pane>
+</Pane>
