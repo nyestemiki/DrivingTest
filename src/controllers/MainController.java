@@ -96,7 +96,12 @@ public class MainController {
    *
    * @return an array-list of the current set of questions
    */
-  public List<Question> getCurrentQuestionSet() {
-    return currentQuestionSet;
+  public static List<Question> getCurrentQuestionSet() {
+    return getInstance().currentQuestionSet;
+  }
+
+  public static void setIndexCorrect(int index) {
+    getInstance().currentQuestionSet.get(index).setAnswer(true);
+    System.out.println(getInstance().currentQuestionSet.get(index));
   }
 }

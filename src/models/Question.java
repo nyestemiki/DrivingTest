@@ -12,6 +12,8 @@ public class Question {
   private String answer4;
   private Long imageId;
 
+  private boolean answer;
+
   // Getters
 
   public String getQuestion() {
@@ -42,6 +44,14 @@ public class Question {
     return imageId;
   }
 
+  public boolean getAnswer() {
+    return answer;
+  }
+
+  public void setAnswer(boolean answer) {
+    this.answer = answer;
+  }
+
   public Question(
       Long id,
       String question,
@@ -63,6 +73,6 @@ public class Question {
   }
 
   public String toString() {
-    return id + ". " + question;
+    return id + ". " + question + " ?" + getAnswer();
   }
 }

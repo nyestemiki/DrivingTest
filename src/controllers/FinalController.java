@@ -1,6 +1,8 @@
 package controllers;
 
 import java.io.IOException;
+import java.util.List;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,6 +13,8 @@ import javafx.stage.Stage;
 import animatefx.animation.Pulse;
 
 import controllers.enums.GAME_OVER_STATUS;
+import models.Question;
+import utils.Export;
 
 /**
  * Controls the final screen
@@ -26,12 +30,16 @@ public class FinalController {
   @FXML
   public Label info;
 
+  private List<Question> completed;
+
   /**
    * Adjust final scene to successful/failed status and restores starting values for the new test
    *
    */
   @FXML
   public void initialize() {
+    completed = MainController.getCurrentQuestionSet();
+
     GameManager.getInstance().stopTimer();
 
     // Successful test
@@ -136,5 +144,11 @@ public class FinalController {
     stage.setScene(new Scene(root));
     stage.setResizable(false);
     stage.show();
+  }
+
+  public void export() {
+    Export export = new Export(completed);
+
+    export.generate();
   }
 }

@@ -134,7 +134,7 @@ public class QuestionController {
   private void loadCurrentQuestion() {
     // Retrieve current question from the GameManager instance
     int currentQuestionIndex = GameManager.getInstance().currentQuestionIndex();
-    Question currentQuestion = MainController.getInstance().getCurrentQuestionSet().get(currentQuestionIndex);
+    Question currentQuestion = MainController.getCurrentQuestionSet().get(currentQuestionIndex);
 
     // Set the header info-display
 
@@ -383,6 +383,7 @@ public class QuestionController {
       return false;
     }
 
+    MainController.setIndexCorrect(currentQuestionIndex);
     return true;
   }
 }
