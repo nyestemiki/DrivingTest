@@ -3,6 +3,7 @@ package controllers;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -43,7 +44,7 @@ public class FinalController {
       // Displayed information
 
       // Time remaining
-      int timeRemaining = GameManager.getInstance().getTimeRemaining();
+      int timeRemaining = GameManager.getTimeRemaining();
       int minutes = timeRemaining / 60;
       int seconds = timeRemaining % 60;
 
@@ -54,8 +55,8 @@ public class FinalController {
 
       String infoString = "Zeit übrig: " + timeRemainingString + "\n";
 
-      String nrCorrectAnswersString = String.valueOf(GameManager.getInstance().getNrCorrectQuestions());
-      String nrTotalQuestionsString = String.valueOf(GameManager.getInstance().getNrTotalQuestions());
+      String nrCorrectAnswersString = String.valueOf(GameManager.getNrCorrectQuestions());
+      String nrTotalQuestionsString = String.valueOf(GameManager.getNrTotalQuestions());
       infoString += "Gute Antworten: " + nrCorrectAnswersString + "/" + nrTotalQuestionsString;
 
       // Set the displayed information
@@ -68,11 +69,11 @@ public class FinalController {
       String infoString = "Kein mehr Zeit\n";
 
       // Number of correctly answered questions
-      int nrCorrectAnswers = GameManager.getInstance().getNrCorrectQuestions();
+      int nrCorrectAnswers = GameManager.getNrCorrectQuestions();
       String nrCorrectAnswersString = String.valueOf(nrCorrectAnswers);
 
       // Number of incorrectly answered questions
-      int nrIncorrectAnswers = GameManager.getInstance().getNrIncorrectQuestions();
+      int nrIncorrectAnswers = GameManager.getNrIncorrectQuestions();
 
       int nrAnsweredQuestions = nrCorrectAnswers + nrIncorrectAnswers;
       String nrAnsweredQuestionsString = String.valueOf(nrAnsweredQuestions);
@@ -87,7 +88,7 @@ public class FinalController {
       String infoString = "Zu viele schlechte Antworten\n";
 
       // Number of correctly answered questions
-      String nrCorrectAnswersString = String.valueOf(GameManager.getInstance().getNrCorrectQuestions());
+      String nrCorrectAnswersString = String.valueOf(GameManager.getNrCorrectQuestions());
       infoString += "Gute Antworten: " + nrCorrectAnswersString;
 
       info.setText(infoString);
@@ -125,5 +126,15 @@ public class FinalController {
   @FXML
   public void exit() {
     System.exit(0);
+  }
+
+  @FXML
+  public void setPreferences() throws IOException {
+    Parent root = FXMLLoader.load(getClass().getResource("/scenes/preferences_menu.fxml"));
+    Stage stage = new Stage();
+    stage.setTitle("Präferenzen");
+    stage.setScene(new Scene(root));
+    stage.setResizable(false);
+    stage.show();
   }
 }

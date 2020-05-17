@@ -40,9 +40,6 @@ public class MainController {
    * Loads the repository, GameManager and the starting set of questions
    */
   public MainController() {
-    // Creating the GameManager singleton
-    GameManager gameManager = new GameManager();
-
     // Absolute path to project
     String filePath = new File("").getAbsolutePath();
 
@@ -71,7 +68,7 @@ public class MainController {
 
     int randomId; // Currently checked id
 
-    for (int i = 0; i < GameManager.getInstance().getNrTotalQuestions(); i++) {
+    for (int i = 0; i < GameManager.getNrTotalQuestions(); i++) {
       // Looking for the first random id that is not already stored
       do {
         randomId = (new Random()).nextInt(GameManager.getNrStoredQuestions());

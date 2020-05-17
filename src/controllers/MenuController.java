@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -28,7 +27,7 @@ public class MenuController {
     stage.show();
   }
 
-  public void setPreferences(MouseEvent mouseEvent) throws IOException {
+  public void setPreferences() throws IOException {
     Parent root = FXMLLoader.load(getClass().getResource("/scenes/preferences_menu.fxml"));
     Stage stage = new Stage();
     stage.setTitle("Präferenzen");
