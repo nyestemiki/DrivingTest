@@ -6,7 +6,6 @@ import controllers.GameManager;
  * Models a timer
  */
 public class Timer extends Thread {
-
   private int currentTime; // in seconds
   private boolean active; // State of the timer
   private int initialTimeInterval;
@@ -41,24 +40,6 @@ public class Timer extends Thread {
   }
 
   /**
-   * Determines whether the timer is active
-   *
-   * @return status of timer
-   */
-  public boolean isActive() {
-    return this.active;
-  }
-
-  /**
-   * Displays current time as min:sec
-   *
-   * @return current time in string format
-   */
-  public String toString() {
-    return currentTime / 60 + ":" + currentTime % 60;
-  }
-
-  /**
    * Activates the timer
    */
   public void setActive() {
@@ -73,12 +54,11 @@ public class Timer extends Thread {
     // The timer was not stopped from the outside and there is still time
     while(active && currentTime != 0) {
       try {
-        // Sleep for a second
         Thread.sleep(1000);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-      // Decrement 1 second
+
       currentTime--;
     }
 
@@ -89,5 +69,14 @@ public class Timer extends Thread {
 
     // Timer is inactive ( terminated )
     active = false;
+  }
+
+  /**
+   * Displays current time as min:sec
+   *
+   * @return current time in string format
+   */
+  public String toString() {
+    return currentTime / 60 + ":" + currentTime % 60;
   }
 }

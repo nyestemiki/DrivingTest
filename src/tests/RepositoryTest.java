@@ -1,9 +1,8 @@
-package tests.repository_test;
+package tests;
 
 import controllers.GameManager;
 import repositories.Repository;
 import models.Question;
-import java.io.File;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,9 +19,8 @@ public class RepositoryTest {
   }
 
   @Test
-  public void readTest() throws Exception {
-    String absolutePath = new File("").getAbsolutePath();
-    Repository repository = new Repository(absolutePath + "/src/test/test_resources/test_questions.json");
+  public void readTest() {
+    Repository repository = new Repository("src/tests/test_resources/test_questions.json");
 
     // Array-list of all the stored question in the repository
     List<Question> questions = repository.getQuestions();

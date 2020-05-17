@@ -11,14 +11,14 @@
          <Font size="20.0" />
       </font>
    </Label>
-   <Button layoutX="29.0" layoutY="441.0" mnemonicParsing="false" onAction="#newTest" prefHeight="115.0" prefWidth="369.0" stylesheets="@../styles/final_scene.css" text="Neu Versuch" textFill="#009eff">
+   <Button layoutX="40.0" layoutY="450.0" mnemonicParsing="false" onAction="#newTest" prefHeight="100.0" prefWidth="200.0" stylesheets="@../styles/final_scene.css" text="Neu Versuch" textFill="#009eff">
       <font>
-         <Font size="18.0" />
+         <Font name="Arial" size="18.0" />
       </font>
    </Button>
-   <Button layoutX="599.0" layoutY="441.0" mnemonicParsing="false" onAction="#exit" prefHeight="115.0" prefWidth="369.0" stylesheets="@../styles/final_scene.css" text="Schliessen" textFill="#009eff">
+   <Button layoutX="760.0" layoutY="450.0" mnemonicParsing="false" onAction="#exit" prefHeight="100.0" prefWidth="200.0" stylesheets="@../styles/final_scene.css" text="Schliessen" textFill="#009eff">
       <font>
-         <Font size="18.0" />
+         <Font name="Arial" size="18.0" />
       </font>
    </Button>
    <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" layoutX="37.0" layoutY="38.0" prefHeight="69.0" prefWidth="927.0" text="Erfolgreiches/-loses Versuch" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true">
@@ -26,6 +26,14 @@
          <Font name="Arial" size="24.0" />
       </font>
    </Label>
-   <Label layoutX="468.0" layoutY="490.0" onMouseClicked="#setPreferences" styleClass="prefs" stylesheets="@../styles/main_menu.css" text="Präferenzen" textFill="WHITE" />
-   <Label layoutX="930.0" layoutY="107.0" onMouseClicked="#export" styleClass="prefs" stylesheets="@../styles/main_menu.css" text="Export" textFill="WHITE" />
+   <Button layoutX="280.0" layoutY="450.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="200.0" text="Präferenzen" onMouseClicked="#setPreferences">
+      <font>
+         <Font name="Arial" size="18.0" />
+      </font>
+   </Button>
+   <Button layoutX="520.0" layoutY="450.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="200.0" text="Exportieren" onMouseClicked="#export">
+      <font>
+         <Font name="Arial" size="18.0" />
+      </font>
+   </Button>
 </Pane>

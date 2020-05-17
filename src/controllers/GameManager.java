@@ -9,32 +9,14 @@ import exceptions.NrAllowedIncorrectQuestionsExceededException;
  * SINGLETON CLASS
  *
  * Controls the defining features of the match
- * Note: questions are linked to the main controller as it is not relevant to the status of the game
- *  whether there is a question at all
  */
 public class GameManager {
-
-  /**
-   * Singleton instance of the GameManager
-   */
   private static GameManager instance = null;
 
-  /**
-   * Static members - define the overall app ( not only a single test )
-   */
-  private static int gameCount; // The number of all tests taken since the starting of the app
-  private static int nrSuccessfulTests; // The number of all successful test from the starting of the app
   private static int nrStoredQuestions; // The number of stored questions in the repository file
   private static Preferences preferences;
 
-  /**
-   * Status of the terminated game
-   */
   private GAME_OVER_STATUS game_over_status = null;
-
-  /**
-   * Timer thread
-   */
   private Timer timer;
 
   /**
@@ -45,22 +27,11 @@ public class GameManager {
   private int nrIncorrectQuestions; // Number of questions answered incorrectly in the ongoing test
 
   /**
-   * Returns the number of remaining questions
-   *
-   * @return number of question left to be answered
-   */
-  public static int nrRemainingQuestion() {
-    return GameManager.preferences.getNrTotalQuestions() - GameManager.getInstance().nrCurrentQuestion;
-  }
-
-  /**
    * Constructor initializes both the static ( app related ) and non-static ( test-related )
    * variables of the app
    */
   public GameManager() {
     // App related
-    gameCount = 0; // No tests taken at this point
-    nrSuccessfulTests = 0; // No tests taken at this point
     nrStoredQuestions = 50; // There are 50 questions stored in the file
 
     // Test related
@@ -86,6 +57,102 @@ public class GameManager {
     }
 
     return instance; // Singleton object already initialized
+  }
+
+  // GAME related
+
+  /**
+   * Restores initial values
+   */
+  public void newGame() {
+    restartTimer();
+    restartGame();
+
+    game_over_status = null;
+  }
+
+  /**
+   * Restores the initial test-related variables
+   */
+  private void restartGame()  {
+    MainController.getInstance().newQuestionSet(); // New set of questions is loaded
+
+    nrCurrentQuestion = 0; // New test starts at index 0
+    nrCorrectQuestions = 0; // Restoring number of correctly answered questions
+    nrIncorrectQuestions = 0; // Restoring number of incorrectly answered questions
+  }
+
+  /**
+   * Takes the test to the next question
+   */
+  private void nextQuestion() {
+    nrCurrentQuestion++;
+  }
+
+  /**
+   * Question answered correctly ( -> next question )
+   */
+  public void correctAnswer() {
+    nrCorrectQuestions++;
+
+    nextQuestion();
+  }
+
+  /**
+   * Question answered incorrectly ( -> next question )
+   *
+   * @throws NrAllowedIncorrectQuestionsExceededException if more questions were answered incorrectly than the limit
+   */
+  public static void incorrectAnswer() throws NrAllowedIncorrectQuestionsExceededException {
+    GameManager.getInstance().nrIncorrectQuestions++;
+
+    // Check if number of allowed incorrect answers surpassed
+    if (GameManager.getInstance().nrIncorrectQuestions > preferences.getNrIncorrectQuestionsAllowed()) {
+      throw new NrAllowedIncorrectQuestionsExceededException();
+    }
+
+    GameManager.getInstance().nextQuestion();
+  }
+
+  /**
+   * Starts a new test with a new timer
+   */
+  void startTest() {
+    startTimer();
+  }
+
+  /**
+   * Terminates the test ( time is up )
+   */
+  public void time_up() {
+    gameOver_time_up();
+  }
+
+  /**
+   * Determines whether the current test is finished
+   *
+   * @return state of current test
+   */
+  public static boolean finished() {
+    return GameManager.getInstance().nrCurrentQuestion > preferences.getNrTotalQuestions() - 1;
+  }
+
+  /**
+   * Determines if current question is the last question in the set
+   *
+   * @return state of last question
+   */
+  public static boolean lastQuestion() {
+    return GameManager.getInstance().nrCurrentQuestion == preferences.getNrTotalQuestions() - 1;
+  }
+
+  /**
+   * Returns the number of remaining questions
+   *
+   * @return number of question left to be answered
+   */
+  public static int nrRemainingQuestion() {
+    return GameManager.preferences.getNrTotalQuestions() - GameManager.getInstance().nrCurrentQuestion;
   }
 
   /**
@@ -116,80 +183,6 @@ public class GameManager {
   }
 
   /**
-   * Restores the initial test-related variables
-   */
-  private void restartGame()  {
-    MainController.getInstance().newQuestionSet(); // New set of questions is loaded
-
-    nrCurrentQuestion = 0; // New test starts at index 0
-    nrCorrectQuestions = 0; // Restoring number of correctly answered questions
-    nrIncorrectQuestions = 0; // Restoring number of incorrectly answered questions
-  }
-
-  /**
-   * Takes the test to the next question
-   */
-  private void nextQuestion() {
-    nrCurrentQuestion++;
-  }
-
-  /**
-   * Question answered correctly ( -> next question )
-   */
-  public void correctAnswer() {
-    nrCorrectQuestions++;
-    nextQuestion();
-  }
-
-  /**
-   * Question answered incorrectly ( -> next question )
-   *
-   * @throws NrAllowedIncorrectQuestionsExceededException if more questions were answered incorrectly than the limit
-   */
-  public static void incorrectAnswer() throws NrAllowedIncorrectQuestionsExceededException {
-    GameManager.getInstance().nrIncorrectQuestions++;
-
-    // Check if number of allowed incorrect answers surpassed
-    if (GameManager.getInstance().nrIncorrectQuestions > preferences.getNrIncorrectQuestionsAllowed()) {
-      throw new NrAllowedIncorrectQuestionsExceededException();
-    }
-
-    GameManager.getInstance().nextQuestion();
-  }
-
-  /**
-   * Restores initial test-values
-   */
-  public void newGame() {
-    gameCount++; // Number of all tests is incremented upon terminating a test
-
-    if (GameManager.getInstance().getGame_over_status() == GAME_OVER_STATUS.SUCCESSFUL) {
-      successfulTest(); // Number of all successful tests is incremented upon terminating a successful test
-    }
-
-    restartTimer();
-    restartGame();
-
-    game_over_status = null;
-  }
-
-  /**
-   * Number of all successful tests is incremented
-   */
-  private void successfulTest() {
-    nrSuccessfulTests++;
-  }
-
-  /**
-   * Returns number of all unsuccessful tests
-   *
-   * @return number of all unsuccessful tests
-   */
-  public int nrUnsuccessfulTests() {
-    return gameCount - nrSuccessfulTests;
-  }
-
-  /**
    * Returns the current question index
    *
    * @return index of current question
@@ -217,21 +210,32 @@ public class GameManager {
   }
 
   /**
-   * Determines whether the current test is finished
+   * Returns the state of the terminated test
    *
-   * @return state of current test
+   * @return state of the terminated test
    */
-  public static boolean finished() {
-    return GameManager.getInstance().nrCurrentQuestion > preferences.getNrTotalQuestions() - 1;
+  public GAME_OVER_STATUS getGame_over_status() {
+    return game_over_status;
   }
 
   /**
-   * Determines if current question is the last question in the set
+   * Returns the remaining time in seconds
    *
-   * @return state of last question
+   * @return remaining time in seconds
    */
-  public static boolean lastQuestion() {
-    return GameManager.getInstance().nrCurrentQuestion == preferences.getNrTotalQuestions() - 1;
+  public static int getTimeRemaining() {
+    return GameManager.getInstance().timer.getCurrentTime();
+  }
+
+  /**
+   * Returns the number of total questions in the test
+   *
+   * @return number of total questions in the test
+   */
+  public static int getNrTotalQuestions() { return preferences.getNrTotalQuestions(); }
+
+  public void setPreferences(Preferences preferences) {
+    GameManager.preferences = preferences;
   }
 
   // Game over status manipulation
@@ -257,36 +261,12 @@ public class GameManager {
     game_over_status = GAME_OVER_STATUS.FAILED_ANSWERS;
   }
 
-  /**
-   * Returns the state of the terminated test
-   *
-   * @return state of the terminated test
-   */
-  public GAME_OVER_STATUS getGame_over_status() {
-    return game_over_status;
-  }
-
-  /**
-   * Returns the remaining time in seconds
-   *
-   * @return remaining time in seconds
-   */
-  public static int getTimeRemaining() {
-    return GameManager.getInstance().timer.getCurrentTime();
-  }
-
-  /**
-   * Returns the number of total questions in the test
-   *
-   * @return number of total questions in the test
-   */
-  public static int getNrTotalQuestions() { return preferences.getNrTotalQuestions(); }
+  // TIMER related
 
   /**
    *  Starts the timer for the test
    */
   private void startTimer() {
-
     // Check if the timer thread exists
     if (timer.isAlive()) {
       restartTimer(); // Timer exists but its data is deprecated
@@ -311,36 +291,5 @@ public class GameManager {
    */
   public void stopTimer() {
     timer.stopTimer();
-  }
-
-  /**
-   * Starts a new test with a new timer
-   */
-  void startTest() {
-    startTimer();
-  }
-
-  /**
-   * Terminates the test ( time is up )
-   */
-  public void time_up() {
-    gameOver_time_up();
-  }
-
-  /**
-   * Determines if the timer is active
-   *
-   * @return status of the timer
-   */
-  public boolean isTimerActive() {
-    return timer.isActive();
-  }
-
-  public Preferences getPreferences() {
-    return GameManager.preferences;
-  }
-
-  public void setPreferences(Preferences preferences) {
-    GameManager.preferences = preferences;
   }
 }

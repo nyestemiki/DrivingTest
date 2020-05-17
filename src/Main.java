@@ -12,19 +12,21 @@ public class Main extends Application {
      * Loads the main menu scene
      *
      * @param primaryStage is the stage that is being set
-     * @throws Exception if stage could not be loaded
      */
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        // Loading the main menu scene
-        Parent root = FXMLLoader.load(getClass().getResource("scenes/main_menu.fxml"));
-        primaryStage.setTitle("Führerschein Theorieprüfung");
-        primaryStage.setScene(new Scene(root));
-        primaryStage.setResizable(false);
-        primaryStage.show();
+    public void start(Stage primaryStage) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("scenes/main_menu.fxml"));
+            primaryStage.setTitle("Führerschein Theorieprüfung");
+            primaryStage.setScene(new Scene(root));
+            primaryStage.setResizable(false);
 
-        // Animate the stage
-        new FadeIn(root).play();
+            primaryStage.show();
+
+            new FadeIn(root).play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

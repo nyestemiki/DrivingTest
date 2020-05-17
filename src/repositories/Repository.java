@@ -14,29 +14,29 @@ import org.json.simple.parser.JSONParser;
  * Managing the data
  */
 public class Repository implements IRepositoty {
-  // Array-list of stored Question instances
   private List<Question> questions = new ArrayList<>();
 
   /**
    * The constructor reads and builds the questions from the given input file
    *
    * @param filename is the path to the storage file
-   * @throws Exception if the given file was not opened with success
    */
-  public Repository(String filename) throws Exception {
-    // Opening the JSON file and retrieving data
-    FileReader reader = new FileReader(filename);
-    JSONParser jsonParser = new JSONParser();
-    JSONObject data = (JSONObject) jsonParser.parse(reader);
+  public Repository(String filename) {
+    JSONObject data = null;
 
-    // Reading the questions from the JSON file
+    try {
+       data = (JSONObject) new JSONParser().parse(new FileReader(filename));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     for (int i = 0; i < GameManager.getNrStoredQuestions(); i++) {
+      assert data != null;
       JSONObject currentQuestion = (JSONObject) data.get(String.valueOf(i));
 
       Long id = (Long) currentQuestion.get("id");
       String questionStr = (String) currentQuestion.get("question");
 
-      // Transforming the JSONArray to Array-list of Longs
       List<Long> correctAnswers = new ArrayList<>();
       JSONArray correctAnswersJsonArray = (JSONArray) currentQuestion.get("correctAnswers");
       for (Object o : correctAnswersJsonArray) {

@@ -1,7 +1,7 @@
 package models;
 
 public class Preferences {
-    private int maxTimeAvailable; // The maximum time the test has to be completed in
+    private int maxTimeAvailable; // The maximum time the test must be completed in
     private int nrTotalQuestions; // Total questions a test contains
     private int nrIncorrectQuestionsAllowed;
 

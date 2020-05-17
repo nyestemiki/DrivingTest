@@ -14,6 +14,26 @@ public class Question {
 
   private boolean answer;
 
+  public Question(
+          Long id,
+          String question,
+          List<Long> correctAnswers,
+          String answer1,
+          String answer2,
+          String answer3,
+          String answer4,
+          Long imageId
+  ) {
+    this.id = id;
+    this.question = question;
+    this.correctAnswers = correctAnswers;
+    this.answer1 = answer1;
+    this.answer2 = answer2;
+    this.answer3 = answer3;
+    this.answer4 = answer4;
+    this.imageId = imageId;
+  }
+
   // Getters
 
   public String getQuestion() {
@@ -50,26 +70,6 @@ public class Question {
 
   public void setAnswer(boolean answer) {
     this.answer = answer;
-  }
-
-  public Question(
-      Long id,
-      String question,
-      List<Long> correctAnswers,
-      String answer1,
-      String answer2,
-      String answer3,
-      String answer4,
-      Long imageId
-  ) {
-    this.id = id;
-    this.question = question;
-    this.correctAnswers = correctAnswers;
-    this.answer1 = answer1;
-    this.answer2 = answer2;
-    this.answer3 = answer3;
-    this.answer4 = answer4;
-    this.imageId = imageId;
   }
 
   public String toString() {

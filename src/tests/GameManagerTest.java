@@ -1,4 +1,4 @@
-package tests.controller_test;
+package tests;
 
 import exceptions.NrAllowedIncorrectQuestionsExceededException;
 import controllers.enums.GAME_OVER_STATUS;
@@ -18,26 +18,34 @@ public class GameManagerTest {
    * Simulates two tests, one with failed answers, one successful
    */
   @Test
-  public void gameManagerSimulationTest() throws NrAllowedIncorrectQuestionsExceededException {
-    GameManager gameManager = new GameManager();
+  public void gameManagerSimulationTest() {
+    GameManager.getInstance().correctAnswer();
+    GameManager.getInstance().correctAnswer();
+    GameManager.getInstance().correctAnswer();
+    GameManager.getInstance().correctAnswer();
 
-    GameManager.getInstance().correctAnswer();
-    GameManager.getInstance().correctAnswer();
-    GameManager.getInstance().correctAnswer();
-    GameManager.getInstance().correctAnswer();
-    GameManager.getInstance().incorrectAnswer();
-    GameManager.getInstance().incorrectAnswer();
+    try {
+      GameManager.incorrectAnswer();
+      GameManager.incorrectAnswer();
+    } catch (Exception e) {
+      assert false;
+    }
+
     GameManager.getInstance().correctAnswer();
     GameManager.getInstance().correctAnswer();
     GameManager.getInstance().correctAnswer();
 
     Assert.assertEquals(9, GameManager.getInstance().currentQuestionIndex());
 
-    GameManager.getInstance().incorrectAnswer();
-    GameManager.getInstance().incorrectAnswer();
+    try {
+      GameManager.incorrectAnswer();
+      GameManager.incorrectAnswer();
+    } catch (Exception e) {
+      assert false;
+    }
 
     try {
-      GameManager.getInstance().incorrectAnswer();
+      GameManager.incorrectAnswer();
     } catch (NrAllowedIncorrectQuestionsExceededException e) {
       GameManager.getInstance().gameOver_failed_answers();
     }

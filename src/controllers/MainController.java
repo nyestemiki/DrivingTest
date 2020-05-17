@@ -11,10 +11,9 @@ import java.util.Random;
  * Controls the whole game
  */
 public class MainController {
+  private Repository repository;
+  private List<Question> currentQuestionSet;
 
-  /**
-   * Singleton main controller instance
-   */
   private static MainController instance = null;
 
   /**
@@ -31,23 +30,14 @@ public class MainController {
   }
 
   /**
-   * Other object references
-   */
-  private Repository repository;
-  private List<Question> currentQuestionSet;
-
-  /**
-   * Loads the repository, GameManager and the starting set of questions
+   * Loads the repository and the starting set of questions
    */
   public MainController() {
-    // Absolute path to project
-    String filePath = new File("").getAbsolutePath();
-
     // Loading in the questions from the repository file
     try {
-      repository = new Repository(filePath + "/src/resources/questions.json");
+      repository = new Repository(new File("").getAbsolutePath() + "/src/resources/questions.json");
     } catch (Exception e) {
-      System.out.println(e.getMessage());
+      e.printStackTrace();
     }
 
     // Generating the starting set of questions
@@ -55,15 +45,12 @@ public class MainController {
   }
 
   /**
-   * Returns 26 random questions (with no repetition) from the repository
+   * Returns the specified number of random questions (with no repetition)
    *
-   * @return Array-list of 26 non-repeating question instances
+   * @return Array-list of a set of question instances
    */
   private List<Question> questionSet() {
-    // Will contain the set of questions to be returned
     List<Question> randomQuestionSet = new ArrayList<>();
-
-    // Will contain the ids of the questions to be returned ( used to omit duplicates )
     List<Integer> randomIds = new ArrayList<>();
 
     int randomId; // Currently checked id
@@ -74,10 +61,7 @@ public class MainController {
         randomId = (new Random()).nextInt(GameManager.getNrStoredQuestions());
       } while(randomIds.indexOf(randomId) != -1);
 
-      // id added to the used ids list
       randomIds.add(randomId);
-
-      // question added to the list of questions to be returned
       randomQuestionSet.add(repository.getQuestions().get(randomId));
     }
 
@@ -100,8 +84,12 @@ public class MainController {
     return getInstance().currentQuestionSet;
   }
 
+  /**
+   * Marks the question by the specified index as correctly answered
+   *
+   * @param index of the question to be marked as correctly answered
+   */
   public static void setIndexCorrect(int index) {
     getInstance().currentQuestionSet.get(index).setAnswer(true);
-    System.out.println(getInstance().currentQuestionSet.get(index));
   }
 }

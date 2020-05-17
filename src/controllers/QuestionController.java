@@ -2,7 +2,6 @@ package controllers;
 
 import controllers.enums.GAME_OVER_STATUS;
 import models.Question;
-import java.io.IOException;
 import exceptions.NrAllowedIncorrectQuestionsExceededException;
 import java.util.List;
 import javafx.application.Platform;
@@ -63,7 +62,7 @@ public class QuestionController {
   private Button nextQuestion;
 
   /**
-   * Initializes answers with 'unselected' (false)
+   * Initializes answers as not selected
    */
   public QuestionController() {
     answer1State = false;
@@ -91,17 +90,18 @@ public class QuestionController {
         int remainingTimeInSecondsInt = GameManager.getTimeRemaining();
         timeRemaining.setText(formatTime(remainingTimeInSecondsInt));
 
+        // Time is up
         if (remainingTimeInSecondsInt == 0) {
-          try {
             setFinalScene();
-          } catch (IOException ignored) {}
         }
       };
 
       while (true) {
         try {
           Thread.sleep(1000);
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
 
         Platform.runLater(updater); // UI update is run on the Application thread
       }
@@ -132,52 +132,48 @@ public class QuestionController {
    * Sets the values of the new question
    */
   private void loadCurrentQuestion() {
-    // Retrieve current question from the GameManager instance
+    updateHeader();
+    List<Long> correctAnswers = updateQuestion();
+
+    new FadeIn(questionContainer).play();
+
+    System.out.println(correctAnswers);
+  }
+
+  /**
+   * Sets the data in the header
+   */
+  private void updateHeader() {
+    timeRemaining.setText(formatTime(GameManager.getTimeRemaining()));
+    nrQuestionsRemaining.setText(GameManager.nrRemainingQuestion() + " Fragen geblieben");
+    nrCorrectQuestions.setText(GameManager.getNrCorrectQuestions() + " wahre");
+    nrIncorrectQuestions.setText(GameManager.getNrIncorrectQuestions() + " falsche");
+  }
+
+  /**
+   * Sets the new question
+   *
+   * @return an array of the correct answers
+   */
+  private List<Long> updateQuestion() {
     int currentQuestionIndex = GameManager.getInstance().currentQuestionIndex();
     Question currentQuestion = MainController.getCurrentQuestionSet().get(currentQuestionIndex);
 
-    // Set the header info-display
-
-    // Remaining time
-    int timeRemainingInt = GameManager.getTimeRemaining();
-    timeRemaining.setText(formatTime(timeRemainingInt));
-
-    // Number of remaining questions
-    int nrRemainingQuestions = GameManager.nrRemainingQuestion();
-    nrQuestionsRemaining.setText(nrRemainingQuestions + " Fragen geblieben");
-
-    // Number of correctly answered questions
-    int nrCorrectQuestionsInt = GameManager.getNrCorrectQuestions();
-    nrCorrectQuestions.setText(nrCorrectQuestionsInt + " wahre");
-
-    // Number of incorrectly answered questions
-    int nrIncorrectQuestionsInt = GameManager.getNrIncorrectQuestions();
-    nrIncorrectQuestions.setText(nrIncorrectQuestionsInt + " falsche");
-
-    // Set the displayed question and answers
     displayedQuestion.setText(currentQuestion.getQuestion());
     answer1.setText(currentQuestion.getAnswer1());
     answer2.setText(currentQuestion.getAnswer2());
     answer3.setText(currentQuestion.getAnswer3());
     answer4.setText(currentQuestion.getAnswer4());
+    picture.setImage(new Image("/resources/images/" + currentQuestion.getImageId() + ".png"));
 
-    // Load the image
-    String imageUrl = "/resources/images/" + currentQuestion.getImageId() + ".png";
-    Image image = new Image(imageUrl);
-    picture.setImage(image);
-
-    // Animation
-    new FadeIn(questionContainer).play();
-
-    // DEVELOPMENT
-    System.out.println(currentQuestion.getCorrectAnswers());
+    return currentQuestion.getCorrectAnswers();
   }
 
   /**
    * Handles the leap towards the next question
    */
   @FXML
-  public void nextQuestion() throws Exception {
+  public void nextQuestion() {
     // Check if number of incorrect questions is valid
     try {
       // Check if submitted answer is valid
@@ -192,37 +188,32 @@ public class QuestionController {
       // Check if game is over ( last question answered )
       if (GameManager.finished()) {
         testFinished();
-
         return;
       }
 
-      // Check if current question is the last one in the current set of questions
       if (GameManager.lastQuestion()) {
-        // Button at the last questions shows finish instead of next question
         nextQuestion.setText("Fertig");
       }
 
-      // Clearing the previously selected answers
+      // Clearing the previous answers
       clearSelectedAnswers();
 
       if (GameManager.getInstance().getGame_over_status() == GAME_OVER_STATUS.TIME_UP) {
         setFinalScene();
       }
 
-      // Finally load the current question
+      // Load the prepared question
       loadCurrentQuestion();
 
     } catch (NrAllowedIncorrectQuestionsExceededException e) {
-      testFailed(); // Too many incorrect answers were chosen
+      testFailed();
     }
   }
 
   /**
    * Loads the test failed scene
-   *
-   * @throws IOException if scene could not be loaded
    */
-  private void testFailed() throws IOException {
+  private void testFailed() {
     // Sets the status of the terminated test
     GameManager.getInstance().gameOver_failed_answers();
 
@@ -232,7 +223,7 @@ public class QuestionController {
   /**
    * Loads the successfully finished test scene
    */
-  private void testFinished() throws IOException {
+  private void testFinished() {
     // Sets the status of the terminated test to successful
     GameManager.getInstance().gameOver_successful();
 
@@ -241,132 +232,112 @@ public class QuestionController {
 
   /**
    * Sets the final scene
-   *
-   * @throws IOException if scene could not be loaded
    */
-  private void setFinalScene() throws IOException {
-    // Current stage
-    Stage stage = (Stage)question.getScene().getWindow();
-    // Wanted pane
-    Pane finalPane = FXMLLoader.load(getClass().getResource("/scenes/final_scene.fxml"));
-    // Wanted scene
-    Scene finalScene = new Scene(finalPane);
-    // Setting new stage
-    stage.setScene(finalScene);
-    // Display the final scene
-    stage.show();
+  private void setFinalScene() {
+    try {
+      Stage stage = (Stage)question.getScene().getWindow();
+      Pane finalPane = FXMLLoader.load(getClass().getResource("/scenes/final_scene.fxml"));
+      stage.setScene(new Scene(finalPane));
+
+      stage.show();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   /**
    * Restores unselected answers
    */
   public void clearSelectedAnswers() {
-    // No answer is selected
+    clearAnswers();
+    clearSelection();
+  }
+
+  /**
+   * No answer selected
+   */
+  private void clearAnswers() {
     answer1State = false;
     answer2State = false;
     answer3State = false;
     answer4State = false;
-
-    try {
-      // Removing the visual selection
-      answer1.getStyleClass().remove("selected");
-      answer2.getStyleClass().remove("selected");
-      answer3.getStyleClass().remove("selected");
-      answer4.getStyleClass().remove("selected");
-    } catch(Exception e) {
-      System.out.println("Could not deselect answers visually");
-    }
   }
 
   /**
-   * Changes state of answer 1 to the opposite value
-   * and also makes a visual mark
+   * No answer button selected
+   */
+  private void clearSelection() {
+    answer1.getStyleClass().remove("selected");
+    answer2.getStyleClass().remove("selected");
+    answer3.getStyleClass().remove("selected");
+    answer4.getStyleClass().remove("selected");
+  }
+
+  /**
+   * Changes state of answer 1 to the opposite value and makes a visual mark
    */
   @FXML
   public void toggleAnswer1() {
     answer1State = !answer1State;
 
-    try {
-      // Visually selecting an answer
-      if (answer1.getStyleClass().contains("selected")) {
-        answer1.getStyleClass().remove("selected");
-      } else {
-        answer1.getStyleClass().add("selected");
-      }
-    } catch(Exception e) {
-      System.out.println("Could not select answer visually");
+    if (answer1.getStyleClass().contains("selected")) {
+      answer1.getStyleClass().remove("selected");
+    } else {
+      answer1.getStyleClass().add("selected");
     }
   }
 
   /**
-   * Changes state of answer 2 to the opposite value
-   * and also makes a visual mark
+   * Changes state of answer 2 to the opposite value and makes a visual mark
    */
   @FXML
   public void toggleAnswer2() {
     answer2State = !answer2State;
 
-    try {
-      // Visually selecting an answer
-      if (answer2.getStyleClass().contains("selected")) {
-        answer2.getStyleClass().remove("selected");
-      } else {
-        answer2.getStyleClass().add("selected");
-      }
-    } catch(Exception e) {
-      System.out.println("Could not select answer visually");
+    if (answer2.getStyleClass().contains("selected")) {
+      answer2.getStyleClass().remove("selected");
+    } else {
+      answer2.getStyleClass().add("selected");
     }
   }
 
   /**
-   * Changes state of answer 3 to the opposite value
-   * and also makes a visual mark
+   * Changes state of answer 3 to the opposite value and makes a visual mark
    */
   @FXML
   public void toggleAnswer3() {
     answer3State = !answer3State;
 
-    try {
-      // Visually selecting an answer
-      if (answer3.getStyleClass().contains("selected")) {
-        answer3.getStyleClass().remove("selected");
-      } else {
-        answer3.getStyleClass().add("selected");
-      }
-    } catch(Exception e) {
-      System.out.println("Could not select answer visually");
+    if (answer3.getStyleClass().contains("selected")) {
+      answer3.getStyleClass().remove("selected");
+    } else {
+      answer3.getStyleClass().add("selected");
     }
   }
 
   /**
-   * Changes state of answer 4 to the opposite value
-   * and also makes a visual mark
+   * Changes state of answer 4 to the opposite value and makes a visual mark
    */
   @FXML
   public void toggleAnswer4() {
     answer4State = !answer4State;
 
-    try {
-      // Visually selecting an answer
-      if (answer4.getStyleClass().contains("selected")) {
-        answer4.getStyleClass().remove("selected");
-      } else {
-        answer4.getStyleClass().add("selected");
-      }
-    } catch(Exception e) {
-      System.out.println("Could not select answer visually");
+    if (answer4.getStyleClass().contains("selected")) {
+      answer4.getStyleClass().remove("selected");
+    } else {
+      answer4.getStyleClass().add("selected");
     }
   }
 
   /**
-   * Checks if the selected answer was valid
+   * Validates the answers
    *
    * @return state of selected answer
    */
   public boolean checkAnswer() {
-    // Current question
     int currentQuestionIndex = GameManager.getInstance().currentQuestionIndex();
-    Question currentQuestion = MainController.getInstance().getCurrentQuestionSet().get(currentQuestionIndex);
+    Question currentQuestion = MainController.getCurrentQuestionSet().get(currentQuestionIndex);
+
     List<Long> correctAnswers = currentQuestion.getCorrectAnswers();
 
     // All correct answers selected, and only the correct answers selected
@@ -383,7 +354,9 @@ public class QuestionController {
       return false;
     }
 
+    // Correct answer
     MainController.setIndexCorrect(currentQuestionIndex);
+
     return true;
   }
 }
