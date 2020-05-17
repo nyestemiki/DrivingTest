@@ -88,7 +88,7 @@ public class QuestionController {
   private void updateTimer() {
     Thread thread = new Thread(() -> {
       Runnable updater = () -> {
-        int remainingTimeInSecondsInt = GameManager.getInstance().getTimeRemaining();
+        int remainingTimeInSecondsInt = GameManager.getTimeRemaining();
         timeRemaining.setText(formatTime(remainingTimeInSecondsInt));
 
         if (remainingTimeInSecondsInt == 0) {
@@ -139,19 +139,19 @@ public class QuestionController {
     // Set the header info-display
 
     // Remaining time
-    int timeRemainingInt = GameManager.getInstance().getTimeRemaining();
+    int timeRemainingInt = GameManager.getTimeRemaining();
     timeRemaining.setText(formatTime(timeRemainingInt));
 
     // Number of remaining questions
-    int nrRemainingQuestions = GameManager.getInstance().nrRemainingQuestion();
+    int nrRemainingQuestions = GameManager.nrRemainingQuestion();
     nrQuestionsRemaining.setText(nrRemainingQuestions + " Fragen geblieben");
 
     // Number of correctly answered questions
-    int nrCorrectQuestionsInt = GameManager.getInstance().getNrCorrectQuestions();
+    int nrCorrectQuestionsInt = GameManager.getNrCorrectQuestions();
     nrCorrectQuestions.setText(nrCorrectQuestionsInt + " wahre");
 
     // Number of incorrectly answered questions
-    int nrIncorrectQuestionsInt = GameManager.getInstance().getNrIncorrectQuestions();
+    int nrIncorrectQuestionsInt = GameManager.getNrIncorrectQuestions();
     nrIncorrectQuestions.setText(nrIncorrectQuestionsInt + " falsche");
 
     // Set the displayed question and answers
@@ -186,18 +186,18 @@ public class QuestionController {
         GameManager.getInstance().correctAnswer();
       } else {
         // Answers were incorrect
-        GameManager.getInstance().incorrectAnswer();
+        GameManager.incorrectAnswer();
       }
 
       // Check if game is over ( last question answered )
-      if (GameManager.getInstance().finished()) {
+      if (GameManager.finished()) {
         testFinished();
 
         return;
       }
 
       // Check if current question is the last one in the current set of questions
-      if (GameManager.getInstance().lastQuestion()) {
+      if (GameManager.lastQuestion()) {
         // Button at the last questions shows finish instead of next question
         nextQuestion.setText("Fertig");
       }

@@ -16,4 +16,9 @@
          <Font name="Arial" size="36.0" />
       </font>
    </Label>
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="461.86572265625" layoutY="537.0" text="Präferenzen" textAlignment="CENTER" textFill="WHITE" onMouseClicked="#setPreferences" styleClass="prefs">
+      <font>
+         <Font name="Arial" size="14.0" />
+      </font>
+   </Label>
 </Pane>

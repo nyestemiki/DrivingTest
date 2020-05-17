@@ -3,7 +3,9 @@ package controllers;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -19,15 +21,19 @@ public class MenuController {
    */
   @FXML
   public void startApp() throws Exception {
-    // Current stage
     Stage stage = (Stage)startPane.getScene().getWindow();
-    // Wanted pane
     Pane questionPane = FXMLLoader.load(getClass().getResource("/scenes/question.fxml"));
-    // Wanted scene
     Scene questionScene = new Scene(questionPane);
-    // Setting new stage
     stage.setScene(questionScene);
-    // Display the question scene
+    stage.show();
+  }
+
+  public void setPreferences(MouseEvent mouseEvent) throws IOException {
+    Parent root = FXMLLoader.load(getClass().getResource("/scenes/preferences_menu.fxml"));
+    Stage stage = new Stage();
+    stage.setTitle("Präferenzen");
+    stage.setScene(new Scene(root));
+    stage.setResizable(false);
     stage.show();
   }
 }

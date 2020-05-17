@@ -9,6 +9,7 @@
 }
 
 .btn {
+  -fx-cursor: default;
   -fx-padding: 25px 40px;
   -fx-background-color: transparent;
   -fx-border: 1px;
@@ -21,4 +22,8 @@
   -fx-background-color: white;
   -fx-background-radius: 6;
   -fx-text-fill: #0E6BBA;
+}
+
+.prefs:hover {
+  -fx-underline: true;
 }

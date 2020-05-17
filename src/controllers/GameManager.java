@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Preferences;
 import models.Timer;
 import controllers.enums.GAME_OVER_STATUS;
 import exceptions.NrAllowedIncorrectQuestionsExceededException;
@@ -19,14 +20,12 @@ public class GameManager {
   private static GameManager instance = null;
 
   /**
-   * Static members - define the overall app ( not only a singular test )
+   * Static members - define the overall app ( not only a single test )
    */
   private static int gameCount; // The number of all tests taken since the starting of the app
   private static int nrSuccessfulTests; // The number of all successful test from the starting of the app
-  private static int nrTotalQuestions; // Total questions a test contains
-  private static int nrIncorrectQuestionsAllowed; // Number of incorrect questions allowed to make
-  private static int maxTimeAvailable; // The maximum time the test has to be completed in
   private static int nrStoredQuestions; // The number of stored questions in the repository file
+  private static Preferences preferences;
 
   /**
    * Status of the terminated game
@@ -50,8 +49,8 @@ public class GameManager {
    *
    * @return number of question left to be answered
    */
-  int nrRemainingQuestion() {
-    return nrTotalQuestions - nrCurrentQuestion;
+  public static int nrRemainingQuestion() {
+    return GameManager.preferences.getNrTotalQuestions() - GameManager.getInstance().nrCurrentQuestion;
   }
 
   /**
@@ -62,9 +61,6 @@ public class GameManager {
     // App related
     gameCount = 0; // No tests taken at this point
     nrSuccessfulTests = 0; // No tests taken at this point
-    nrTotalQuestions = 26; // Default number of questions is 26
-    nrIncorrectQuestionsAllowed = 4; // Default number of allowed incorrect questions
-    maxTimeAvailable = 30*60; // 30 minutes in seconds (30x60)
     nrStoredQuestions = 50; // There are 50 questions stored in the file
 
     // Test related
@@ -72,7 +68,10 @@ public class GameManager {
     nrCorrectQuestions = 0; // At the beginning there are not questions answered
     nrIncorrectQuestions = 0; // At the beginning there are not questions answered
 
-    // Timer
+    if (preferences == null) {
+      preferences = new Preferences(30*60, 26, 4);
+    }
+
     timer = new Timer();
   }
 
@@ -113,7 +112,7 @@ public class GameManager {
    * @return the maximum time to complete the test
    */
   public static int getMaxTimeAvailable() {
-    return maxTimeAvailable;
+    return preferences.getMaxTimeAvailable();
   }
 
   /**
@@ -147,15 +146,15 @@ public class GameManager {
    *
    * @throws NrAllowedIncorrectQuestionsExceededException if more questions were answered incorrectly than the limit
    */
-  public void incorrectAnswer() throws NrAllowedIncorrectQuestionsExceededException {
-    nrIncorrectQuestions++;
+  public static void incorrectAnswer() throws NrAllowedIncorrectQuestionsExceededException {
+    GameManager.getInstance().nrIncorrectQuestions++;
 
     // Check if number of allowed incorrect answers surpassed
-    if (nrIncorrectQuestions > nrIncorrectQuestionsAllowed) {
+    if (GameManager.getInstance().nrIncorrectQuestions > preferences.getNrIncorrectQuestionsAllowed()) {
       throw new NrAllowedIncorrectQuestionsExceededException();
     }
 
-    nextQuestion();
+    GameManager.getInstance().nextQuestion();
   }
 
   /**
@@ -204,8 +203,8 @@ public class GameManager {
    *
    * @return number of correctly answered questions in the current test
    */
-  int getNrCorrectQuestions() {
-    return nrCorrectQuestions;
+  public static int getNrCorrectQuestions() {
+    return GameManager.getInstance().nrCorrectQuestions;
   }
 
   /**
@@ -213,8 +212,8 @@ public class GameManager {
    *
    * @return number of incorrectly answered questions in the current test
    */
-  int getNrIncorrectQuestions() {
-    return nrIncorrectQuestions;
+  public static int getNrIncorrectQuestions() {
+    return GameManager.getInstance().nrIncorrectQuestions;
   }
 
   /**
@@ -222,8 +221,8 @@ public class GameManager {
    *
    * @return state of current test
    */
-  boolean finished() {
-    return nrCurrentQuestion > nrTotalQuestions - 1;
+  public static boolean finished() {
+    return GameManager.getInstance().nrCurrentQuestion > preferences.getNrTotalQuestions() - 1;
   }
 
   /**
@@ -231,8 +230,8 @@ public class GameManager {
    *
    * @return state of last question
    */
-  boolean lastQuestion() {
-    return nrCurrentQuestion == nrTotalQuestions - 1;
+  public static boolean lastQuestion() {
+    return GameManager.getInstance().nrCurrentQuestion == preferences.getNrTotalQuestions() - 1;
   }
 
   // Game over status manipulation
@@ -272,8 +271,8 @@ public class GameManager {
    *
    * @return remaining time in seconds
    */
-  int getTimeRemaining() {
-    return timer.getCurrentTime();
+  public static int getTimeRemaining() {
+    return GameManager.getInstance().timer.getCurrentTime();
   }
 
   /**
@@ -281,9 +280,7 @@ public class GameManager {
    *
    * @return number of total questions in the test
    */
-  int getNrTotalQuestions() {
-    return nrTotalQuestions;
-  }
+  public static int getNrTotalQuestions() { return preferences.getNrTotalQuestions(); }
 
   /**
    *  Starts the timer for the test
@@ -337,5 +334,13 @@ public class GameManager {
    */
   public boolean isTimerActive() {
     return timer.isActive();
+  }
+
+  public Preferences getPreferences() {
+    return GameManager.preferences;
+  }
+
+  public void setPreferences(Preferences preferences) {
+    GameManager.preferences = preferences;
   }
 }

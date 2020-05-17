@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="preferencesPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="500.0" prefWidth="600.0" styleClass="main" stylesheets="@../styles/preferences.css"
+      xmlns="http://javafx.com/javafx/10.0.2" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.PreferencesController">
+   <Label layoutX="235.0" layoutY="41.0" text="Präferenzen" textFill="WHITE">
+      <font>
+         <Font name="Arial" size="24.0"/>
+      </font>
+   </Label>
+   <Pane layoutX="50.0" layoutY="80.0" prefHeight="300.0" prefWidth="500.0">
+      <Pane layoutX="25.0" layoutY="50.0" prefHeight="50.0" prefWidth="450.0">
+         <Label prefHeight="50.0" prefWidth="197.0" text="Zeit (Minuten)" textAlignment="JUSTIFY"
+                textFill="WHITE">
+            <font>
+               <Font name="Arial" size="18.0"/>
+            </font>
+         </Label>
+         <Slider fx:id="timeSlider" blockIncrement="60.0" layoutX="300.0" layoutY="18.0" max="3600.0" min="60.0"
+                 prefWidth="140.0" snapToTicks="true" styleClass="sliderInfo" onMouseDragged="#timeChanged"
+                 onMouseClicked="#timeChanged"/>
+         <Label layoutX="225.0" layoutY="15.0" text="Label" textFill="WHITE" fx:id="timeLabel"/>
+      </Pane>
+      <Pane layoutX="25.0" layoutY="150.0" prefHeight="50.0" prefWidth="450.0">
+         <Label prefHeight="50.0" prefWidth="197.0" text="Anzahl der Fragen" textAlignment="JUSTIFY"
+                textFill="WHITE">
+            <font>
+               <Font name="Arial" size="18.0"/>
+            </font>
+         </Label>
+         <Slider fx:id="questionCountSlider" blockIncrement="1.0" layoutX="300.0" layoutY="18.0" max="50.0"
+                 min="1.0" onMouseDragged="#questionCountChanged" onMouseClicked="#questionCountChanged"/>
+         <Label layoutX="225.0" layoutY="15.0" text="Label" textFill="WHITE" fx:id="questionCountLabel"/>
+      </Pane>
+      <Pane layoutX="25.0" layoutY="250.0" prefHeight="50.0" prefWidth="450.0">
+         <Label prefHeight="50.0" prefWidth="197.0" text="Erlaubte Anzahl der falschen Antworten" textFill="WHITE"
+                wrapText="true">
+            <font>
+               <Font name="Arial" size="18.0"/>
+            </font>
+         </Label>
+         <Slider fx:id="falseCountSlider" blockIncrement="1.0" layoutX="300.0" layoutY="18.0" max="50.0" min="1.0"
+                 onMouseDragged="#falseCountChanged" onMouseClicked="#falseCountChanged"/>
+         <Label layoutX="225.0" layoutY="15.0" text="Label" textFill="WHITE" fx:id="falseCountLabel"/>
+      </Pane>
+   </Pane>
+   <Pane layoutX="50.0" layoutY="413.0" prefHeight="75.0" prefWidth="500.0">
+      <Button layoutX="56.0" layoutY="3.0" mnemonicParsing="false" onAction="#cancel" styleClass="btn"
+              text="Annullieren"/>
+      <Button layoutX="312.0" layoutY="3.0" mnemonicParsing="false" onAction="#save" styleClass="btn"
+              text="Festlegen"/>
+   </Pane>
+</Pane>
