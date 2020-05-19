@@ -2,6 +2,8 @@ package controllers;
 
 import models.Question;
 import repositories.Repository;
+import repositories.interfaces.IRepositoty;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.Random;
  * Controls the whole game
  */
 public class MainController {
-  private Repository repository;
+  private IRepositoty repository;
   private List<Question> currentQuestionSet;
 
   private static MainController instance = null;
